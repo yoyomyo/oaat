@@ -1,9 +1,14 @@
 package com.soundsmeow.apps.oaat.ui.task;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -33,19 +38,40 @@ public class TaskFragment extends Fragment {
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), null);
         taskList.setLayoutManager(new LinearLayoutManager(getActivity()));
         taskList.setAdapter(recyclerViewAdapter);
+        Observer<List<Task>> taskListObserver = new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                recyclerViewAdapter.taskList = tasks;
+                recyclerViewAdapter.notifyDataSetChanged();
+            }
+        };
 
         taskViewModel =
                 ViewModelProviders.of(this).get(TaskViewModel.class);
         taskViewModel.getTasksLiveData().observe(this, taskListObserver);
 
+        View fab = root.findViewById(R.id.add_task_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterNewTask(getContext());
+            }
+        });
+
         return root;
     }
 
-    Observer<List<Task>> taskListObserver = new Observer<List<Task>>() {
-        @Override
-        public void onChanged(List<Task> tasks) {
-            recyclerViewAdapter.taskList = tasks;
-            recyclerViewAdapter.notifyDataSetChanged();
-        }
-    };
+    private void enterNewTask(Context context) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        final EditText edittext = new EditText(context);
+        dialogBuilder.setView(edittext);
+        dialogBuilder.setPositiveButton(R.string.create_task, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String newTask = edittext.getText().toString();
+                taskViewModel.addTask(newTask);
+            }
+        });
+        dialogBuilder.show();
+    }
+    
 }

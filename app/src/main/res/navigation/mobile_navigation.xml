@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.soundsmeow.apps.oaat.ui.task.TaskFragment"
-        android:label="@string/title_home"
+        android:label="@string/title_tasks"
         tools:layout="@layout/fragment_tasks" />
 
     <fragment

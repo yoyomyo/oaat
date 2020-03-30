@@ -1,5 +1,6 @@
 package com.soundsmeow.apps.oaat.ui.task;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +23,16 @@ public class TaskViewModel extends ViewModel {
         return mTasksLiveData;
     }
 
+    public void addTask(String taskDetail) {
+        Task task = new Task();
+        task.setDetails(taskDetail);
+        task.setIsDone(false);
+        task.setCreated(new Date());
+        task.setPriority(mTasks.size());
+
+        mTasks.add(task);
+    }
+
     private void init() {
         populateList();
         mTasksLiveData.setValue(mTasks);
@@ -34,7 +45,7 @@ public class TaskViewModel extends ViewModel {
         mTasks.add(task1);
 
         Task task2 = new Task();
-        task2.setDetails("Go for a walk");
+        task2.setDetails("Go for a walk in Rose Garden");
         task2.setIsDone(true);
         mTasks.add(task2);
     }
