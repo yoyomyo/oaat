@@ -36,4 +36,22 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     // TODO Use AutoValue or AutoFactory(DI) in the future
+
+    // Google
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:17.0.0')
+
+    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.firebase:firebase-auth'
+
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+
+    // Firebase UI
+    implementation 'com.firebaseui:firebase-ui-database:3.3.1'
 }
+
+
+apply plugin: 'com.google.gms.google-services'

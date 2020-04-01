@@ -73,5 +73,4 @@ public class TaskFragment extends Fragment {
         });
         dialogBuilder.show();
     }
-    
 }
