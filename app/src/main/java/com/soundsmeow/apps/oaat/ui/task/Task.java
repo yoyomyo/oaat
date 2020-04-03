@@ -76,7 +76,6 @@ public class Task {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof  Task) {
-            Log.d("Task", "Task equals called");
             Task t = (Task) obj;
             return t.getDetail() !=null
                     && detail.equals(t.getDetail())
