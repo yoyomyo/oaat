@@ -1,27 +1,23 @@
 package com.soundsmeow.apps.oaat.ui.task;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.soundsmeow.apps.oaat.R;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class TaskFragment extends Fragment {
@@ -29,10 +25,12 @@ public class TaskFragment extends Fragment {
     private TaskViewModel taskViewModel;
     private RecyclerView taskList;
     private RecyclerViewAdapter recyclerViewAdapter;
+    private ProgressBar progressBar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_tasks, container, false);
+        progressBar = root.findViewById(R.id.progress_bar);
 
         taskList = root.findViewById(R.id.task_list);
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), null);
@@ -41,11 +39,19 @@ public class TaskFragment extends Fragment {
         Observer<List<Task>> taskListObserver = new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
-                recyclerViewAdapter.taskList = tasks;
-                recyclerViewAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
+                if (recyclerViewAdapter.taskList == null) {
+                    recyclerViewAdapter.taskList = tasks;
+                    recyclerViewAdapter.notifyDataSetChanged();
+                } else if (tasks != null) {
+                    // A list already exists
+                    DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                            new TasksDiffCallback(recyclerViewAdapter.taskList, tasks));
+                    recyclerViewAdapter.taskList = tasks;
+                    result.dispatchUpdatesTo(recyclerViewAdapter);
+                }
             }
         };
-
         taskViewModel =
                 ViewModelProviders.of(this).get(TaskViewModel.class);
         taskViewModel.getTasksLiveData().observe(this, taskListObserver);
@@ -54,23 +60,22 @@ public class TaskFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterNewTask(getContext());
+                showDialog(taskViewModel);
             }
         });
 
+        taskViewModel.addValueEventListener();
         return root;
     }
 
-    private void enterNewTask(Context context) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-        final EditText edittext = new EditText(context);
-        dialogBuilder.setView(edittext);
-        dialogBuilder.setPositiveButton(R.string.create_task, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String newTask = edittext.getText().toString();
-                taskViewModel.addTask(newTask);
-            }
-        });
-        dialogBuilder.show();
+    @Override
+    public void onDestroy() {
+        taskViewModel.removeValueEventListener();
+        super.onDestroy();
+    }
+
+    void showDialog(NewTaskDialog.AddNewTaskListener listener) {
+        DialogFragment newFragment = NewTaskDialog.newInstance(listener);
+        newFragment.show(getFragmentManager(), NewTaskDialog.DIALOG_TAG);
     }
 }
