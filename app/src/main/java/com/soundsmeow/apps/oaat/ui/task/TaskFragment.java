@@ -40,14 +40,14 @@ public class TaskFragment extends Fragment {
             @Override
             public void onChanged(List<Task> tasks) {
                 progressBar.setVisibility(View.GONE);
-                if (recyclerViewAdapter.taskList == null) {
-                    recyclerViewAdapter.taskList = tasks;
+                if (recyclerViewAdapter.getTaskList() == null) {
+                    recyclerViewAdapter.setTaskList(tasks);
                     recyclerViewAdapter.notifyDataSetChanged();
                 } else if (tasks != null) {
                     // A list already exists
                     DiffUtil.DiffResult result = DiffUtil.calculateDiff(
-                            new TasksDiffCallback(recyclerViewAdapter.taskList, tasks));
-                    recyclerViewAdapter.taskList = tasks;
+                            new TasksDiffCallback(recyclerViewAdapter.getTaskList(), tasks));
+                    recyclerViewAdapter.setTaskList(tasks);
                     result.dispatchUpdatesTo(recyclerViewAdapter);
                 }
             }
@@ -55,6 +55,7 @@ public class TaskFragment extends Fragment {
         taskViewModel =
                 ViewModelProviders.of(this).get(TaskViewModel.class);
         taskViewModel.getTasksLiveData().observe(this, taskListObserver);
+        recyclerViewAdapter.setListener(taskViewModel);
 
         View fab = root.findViewById(R.id.add_task_button);
         fab.setOnClickListener(new View.OnClickListener() {

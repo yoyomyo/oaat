@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.DiffUtil;
 
 public class TaskViewModel extends ViewModel implements ValueEventListener,
-        NewTaskDialog.AddNewTaskListener{
+        NewTaskDialog.AddNewTaskListener, RecyclerViewAdapter.UpdateTaskListener{
 
     private static final String TAG = TaskViewModel.class.getSimpleName();
     private static final String TASKS_CHILD = "tasks";
@@ -50,6 +50,18 @@ public class TaskViewModel extends ViewModel implements ValueEventListener,
 
         mTasks.add(task);
         mFirebaseDatabaseReference.push().setValue(task);
+    }
+
+    public void updateTask(int position, boolean isDone) {
+        Task t = mTasks.get(position);
+        t.setIsDone(isDone);
+        if (isDone) {
+            Date now = new Date();
+            t.setFinishedTime(now.getTime());
+        } else {
+            t.setFinishedTime(0);
+        }
+        mFirebaseDatabaseReference.child(t.getKey()).setValue(t);
     }
 
     public void addValueEventListener() {

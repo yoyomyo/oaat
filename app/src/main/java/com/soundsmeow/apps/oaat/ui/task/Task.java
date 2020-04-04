@@ -1,13 +1,11 @@
 package com.soundsmeow.apps.oaat.ui.task;
 
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 
 public class Task {
 
-    private String id;
+    private String key;
     private int priority;
     private String detail;
     private boolean isDone;
@@ -16,8 +14,12 @@ public class Task {
     private long createdTime;
     private long finishedTime;
 
-    public void setId(String id) {
-        this.id = id;
+    public void setKey(String id) {
+        this.key = id;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public void setPriority(int p) {
@@ -48,7 +50,7 @@ public class Task {
         return detail;
     }
 
-    public boolean getisDone() {
+    public boolean getIsDone() {
         return isDone;
     }
 
@@ -62,11 +64,13 @@ public class Task {
 
     public static Task fromSnapshot(DataSnapshot snapshot) {
         Task task = new Task();
+
         String detail = snapshot.child("detail").getValue(String.class);
         boolean isDone = snapshot.child("isDone").getValue(Boolean.class);
         int priority = snapshot.child("priority").getValue(Integer.class);
         float createdTime = snapshot.child("createdTime").getValue(Float.class);
         float finishedTime = snapshot.child("finishedTime").getValue(Float.class);
+        task.setKey(snapshot.getKey());
         task.setDetail(detail);
         task.setIsDone(isDone);
         task.setPriority(priority);
@@ -77,7 +81,7 @@ public class Task {
     public boolean equals(Object obj) {
         if (obj instanceof  Task) {
             Task t = (Task) obj;
-            return t.getDetail() !=null
+            return t.getDetail() != null
                     && detail.equals(t.getDetail())
                     && isDone == t.isDone
                     && createdTime == t.createdTime

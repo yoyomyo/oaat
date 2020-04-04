@@ -1,10 +1,12 @@
 package com.soundsmeow.apps.oaat.ui.task;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.soundsmeow.apps.oaat.R;
@@ -14,10 +16,28 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    Activity context;
-    List<Task> taskList;
+    public interface UpdateTaskListener {
+        void updateTask(int taskPosition, boolean isDone);
+    }
+
+    private UpdateTaskListener listener;
+    private Activity context;
+    private List<Task> taskList;
+
+    public List<Task> getTaskList() {
+        return taskList;
+    }
+
+    public void setTaskList(List<Task> tasks) {
+        taskList = tasks;
+    }
+
+    public void setListener(UpdateTaskListener listener) {
+        this.listener = listener;
+    }
+
 
     public RecyclerViewAdapter(Activity context, List<Task> data) {
         this.context = context;
@@ -32,11 +52,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         Task task = taskList.get(position);
-        TaskViewHolder taskViewHolder = (TaskViewHolder) holder;
+        final TaskViewHolder taskViewHolder = (TaskViewHolder) holder;
         taskViewHolder.detail.setText(task.getDetail());
-        taskViewHolder.isDone.setChecked(task.getisDone());
+        taskViewHolder.isDone.setChecked(task.getIsDone());
+        taskViewHolder.isDone.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    taskViewHolder.detail.setPaintFlags(
+                            taskViewHolder.detail.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    taskViewHolder.detail.setPaintFlags(0);
+                }
+                listener.updateTask(position, isChecked);
+            }
+        });
     }
 
     @Override
@@ -50,7 +83,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public class TaskViewHolder extends RecyclerView.ViewHolder {
 
         TextView detail;
-        RadioButton isDone;
+        CheckBox isDone;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
