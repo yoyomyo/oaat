@@ -68,12 +68,14 @@ public class Task {
         String detail = snapshot.child("detail").getValue(String.class);
         boolean isDone = snapshot.child("isDone").getValue(Boolean.class);
         int priority = snapshot.child("priority").getValue(Integer.class);
-        float createdTime = snapshot.child("createdTime").getValue(Float.class);
-        float finishedTime = snapshot.child("finishedTime").getValue(Float.class);
+        long createdTime = snapshot.child("createdTime").getValue(Long.class);
+        long finishedTime = snapshot.child("finishedTime").getValue(Long.class);
         task.setKey(snapshot.getKey());
         task.setDetail(detail);
         task.setIsDone(isDone);
         task.setPriority(priority);
+        task.setCreatedTime((long)createdTime);
+        task.setFinishedTime((long)finishedTime);
         return task;
     }
 
@@ -84,8 +86,7 @@ public class Task {
             return t.getDetail() != null
                     && detail.equals(t.getDetail())
                     && isDone == t.isDone
-                    && createdTime == t.createdTime
-                    && finishedTime == t.finishedTime;
+                    && createdTime == t.createdTime;
         }
         return false;
     }

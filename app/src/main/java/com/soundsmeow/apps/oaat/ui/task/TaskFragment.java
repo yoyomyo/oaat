@@ -2,6 +2,7 @@ package com.soundsmeow.apps.oaat.ui.task;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class TaskFragment extends Fragment {
 
+    private static final String TAG = TaskFragment.class.getSimpleName();
     private TaskViewModel taskViewModel;
     private RecyclerView taskList;
     private RecyclerViewAdapter recyclerViewAdapter;
