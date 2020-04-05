@@ -3,7 +3,7 @@
     <string name="title_tasks">Tasks</string>
     <string name="title_stats">Stats</string>
     <string name="create_task">Create Task</string>
-    <string name="sign_in">Sign in</string>
+    <string name="sign_in_message">Sign in to preserve tasks</string>
     <string name="sign_out">Sign out</string>
     <string name="task_hint">Enter a task</string>
 </resources>

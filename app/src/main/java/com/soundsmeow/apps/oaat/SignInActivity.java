@@ -42,7 +42,7 @@ public class SignInActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_sign_in);
 
         // Assign fields
-        mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        mSignInButton = (SignInButton) findViewById(R.id.sign_in_with_google_button);
 
         // Set click listeners
         mSignInButton.setOnClickListener(this);
@@ -64,8 +64,9 @@ public class SignInActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.sign_in_button:
+            case R.id.sign_in_with_google_button:
                 signIn();
+                mSignInButton.setEnabled(false);
                 break;
         }
     }
@@ -84,6 +85,7 @@ public class SignInActivity extends AppCompatActivity implements
                 firebaseAuthWithGoogle(account);
             } else {
                 Log.e(TAG, "Sign in failed");
+                mSignInButton.setEnabled(true);
             }
         }
     }
@@ -99,7 +101,10 @@ public class SignInActivity extends AppCompatActivity implements
                             Log.e(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(SignInActivity.this, "Auth failed", Toast.LENGTH_SHORT).show();
                         } else {
-                            startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                            Intent mainActivityIntent = new Intent(SignInActivity.this, MainActivity.class);
+                            mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(mainActivityIntent);
+                            overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
                             finish();
                         }
                     }

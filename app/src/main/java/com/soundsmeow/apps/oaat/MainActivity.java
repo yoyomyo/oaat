@@ -1,7 +1,9 @@
 package com.soundsmeow.apps.oaat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,10 +37,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     // User display information
     private String mUsername;
     private String mUserAvatarUrl;
+    // Place to store user information;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -79,15 +85,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void initFirebaseAuth() {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        // Is it possible to avoid showing SignInActivity
         if (mFirebaseUser == null) {
             startActivity(new Intent(this, SignInActivity.class));
-            finish();
+            //finish();
             return;
         } else {
             mUsername = mFirebaseUser.getDisplayName();
             if (mFirebaseUser.getPhotoUrl() != null) {
                 mUserAvatarUrl = mFirebaseUser.getPhotoUrl().toString();
             }
+            // save username and avatar in shared preference
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
