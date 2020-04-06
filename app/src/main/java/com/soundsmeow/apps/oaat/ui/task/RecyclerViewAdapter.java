@@ -38,7 +38,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.listener = listener;
     }
 
-
     public RecyclerViewAdapter(Activity context, List<Task> data) {
         this.context = context;
         this.taskList = data;

@@ -17,9 +17,12 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.soundsmeow.apps.oaat.R;
 
 import java.util.List;
+
+import static com.soundsmeow.apps.oaat.ui.task.TaskViewModel.TASKS_CHILD;
 
 public class TaskFragment extends Fragment {
 
@@ -54,8 +57,10 @@ public class TaskFragment extends Fragment {
                 }
             }
         };
+        TaskViewModelFactory factory = new TaskViewModelFactory(this.getActivity().getApplication(),
+                FirebaseDatabase.getInstance().getReference().child(TASKS_CHILD));
         taskViewModel =
-                ViewModelProviders.of(this).get(TaskViewModel.class);
+                ViewModelProviders.of(this, factory).get(TaskViewModel.class);
         taskViewModel.getTasksLiveData().observe(this, taskListObserver);
         recyclerViewAdapter.setListener(taskViewModel);
 

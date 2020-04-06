@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // Is it possible to avoid showing SignInActivity
         if (mFirebaseUser == null) {
             startActivity(new Intent(this, SignInActivity.class));
-            //finish();
+            finish();
             return;
         } else {
             mUsername = mFirebaseUser.getDisplayName();

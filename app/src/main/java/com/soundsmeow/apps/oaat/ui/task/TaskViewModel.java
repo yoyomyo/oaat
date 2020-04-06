@@ -22,16 +22,16 @@ public class TaskViewModel extends ViewModel implements ValueEventListener,
         NewTaskDialog.AddNewTaskListener, RecyclerViewAdapter.UpdateTaskListener{
 
     private static final String TAG = TaskViewModel.class.getSimpleName();
-    private static final String TASKS_CHILD = "tasks";
+    protected static final String TASKS_CHILD = "tasks";
 
     // Persist data using a data source, either Room or in the cloud or both
     private DatabaseReference mFirebaseDatabaseReference;
 
     private MutableLiveData<List<Task>> mTasksLiveData;
-    private List<Task>  mTasks;
+    protected List<Task>  mTasks;
 
-    public TaskViewModel() {
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference().child(TASKS_CHILD);
+    public TaskViewModel(DatabaseReference firebaseDatabaseReference) {
+        mFirebaseDatabaseReference = firebaseDatabaseReference;
         mTasksLiveData = new MutableLiveData<>();
         mTasks = new LinkedList<>();
     }

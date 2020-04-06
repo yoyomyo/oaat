@@ -62,6 +62,7 @@ public class Task {
         return finishedTime;
     }
 
+    // How to test this?
     public static Task fromSnapshot(DataSnapshot snapshot) {
         Task task = new Task();
 
@@ -90,5 +91,4 @@ public class Task {
         }
         return false;
     }
-
 }
