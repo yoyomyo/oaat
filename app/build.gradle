@@ -17,42 +17,48 @@ android {
         }
     }
 }
-repositories { jcenter() }
+repositories {
+    jcenter()
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // UI
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.navigation:navigation-fragment:2.0.0'
-    implementation 'androidx.navigation:navigation-ui:2.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.2.2'
+    implementation 'androidx.navigation:navigation-ui:2.2.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     // Test
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:2.+"
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // TODO Use AutoValue or AutoFactory(DI) in the future
 
     // Google
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:17.0.0')
 
-    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'com.google.firebase:firebase-storage'
-    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-auth:19.3.1'
 
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-database:3.3.1'
+
+    // Google Analytics.
+    implementation 'com.google.firebase:firebase-analytics:17.4.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
 }
 
-
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'

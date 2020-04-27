@@ -38,9 +38,12 @@ public class TaskFragment extends Fragment {
         progressBar = root.findViewById(R.id.progress_bar);
 
         taskList = root.findViewById(R.id.task_list);
+
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), null);
+
         taskList.setLayoutManager(new LinearLayoutManager(getActivity()));
         taskList.setAdapter(recyclerViewAdapter);
+
         Observer<List<Task>> taskListObserver = new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
@@ -78,12 +81,16 @@ public class TaskFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        taskViewModel.removeValueEventListener();
+        if (taskViewModel != null) {
+            taskViewModel.removeValueEventListener();
+        }
         super.onDestroy();
     }
 
-    void showDialog(NewTaskDialog.AddNewTaskListener listener) {
+    private void showDialog(NewTaskDialog.AddNewTaskListener listener) {
         DialogFragment newFragment = NewTaskDialog.newInstance(listener);
-        newFragment.show(getFragmentManager(), NewTaskDialog.DIALOG_TAG);
+        if (getFragmentManager() != null) {
+            newFragment.show(getFragmentManager(), NewTaskDialog.DIALOG_TAG);
+        }
     }
 }
