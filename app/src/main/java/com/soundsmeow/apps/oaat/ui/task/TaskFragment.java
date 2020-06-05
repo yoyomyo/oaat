@@ -2,7 +2,6 @@ package com.soundsmeow.apps.oaat.ui.task;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import com.google.firebase.database.FirebaseDatabase;
 import com.soundsmeow.apps.oaat.R;
 
@@ -32,6 +33,8 @@ public class TaskFragment extends Fragment {
     private RecyclerViewAdapter recyclerViewAdapter;
     private ProgressBar progressBar;
 
+    private final CompositeDisposable mDisposable = new CompositeDisposable();
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_tasks, container, false);
@@ -44,47 +47,41 @@ public class TaskFragment extends Fragment {
         taskList.setLayoutManager(new LinearLayoutManager(getActivity()));
         taskList.setAdapter(recyclerViewAdapter);
 
-        Observer<List<Task>> taskListObserver = new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                progressBar.setVisibility(View.GONE);
-                if (recyclerViewAdapter.getTaskList() == null) {
-                    recyclerViewAdapter.setTaskList(tasks);
-                    recyclerViewAdapter.notifyDataSetChanged();
-                } else if (tasks != null) {
-                    // A list already exists
-                    DiffUtil.DiffResult result = DiffUtil.calculateDiff(
-                            new TasksDiffCallback(recyclerViewAdapter.getTaskList(), tasks));
-                    recyclerViewAdapter.setTaskList(tasks);
-                    result.dispatchUpdatesTo(recyclerViewAdapter);
-                }
+        final Observer<List<Task>> taskListObserver = tasks -> {
+            progressBar.setVisibility(View.GONE);
+            if (recyclerViewAdapter.getTaskList() == null) {
+                recyclerViewAdapter.setTaskList(tasks);
+                recyclerViewAdapter.notifyDataSetChanged();
+            } else if (tasks != null) {
+                // A list already exists
+                DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                        new TasksDiffCallback(recyclerViewAdapter.getTaskList(), tasks));
+                recyclerViewAdapter.setTaskList(tasks);
+                result.dispatchUpdatesTo(recyclerViewAdapter);
             }
         };
         TaskViewModelFactory factory = new TaskViewModelFactory(this.getActivity().getApplication(),
                 FirebaseDatabase.getInstance().getReference().child(TASKS_CHILD));
         taskViewModel =
                 ViewModelProviders.of(this, factory).get(TaskViewModel.class);
-        taskViewModel.getTasksLiveData().observe(this, taskListObserver);
+
+        mDisposable.add(taskViewModel.getAllTasks()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(taskList -> taskListObserver.onChanged(taskList)));
+
         recyclerViewAdapter.setListener(taskViewModel);
 
         View fab = root.findViewById(R.id.add_task_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(taskViewModel);
-            }
-        });
+        fab.setOnClickListener(v -> showDialog(taskViewModel));
 
-        taskViewModel.addValueEventListener();
         return root;
     }
 
     @Override
     public void onDestroy() {
-        if (taskViewModel != null) {
-            taskViewModel.removeValueEventListener();
-        }
         super.onDestroy();
+        mDisposable.dispose();
     }
 
     private void showDialog(NewTaskDialog.AddNewTaskListener listener) {

@@ -1,46 +1,35 @@
 package com.soundsmeow.apps.oaat.ui.task;
 
-import android.util.Log;
+import android.app.Application;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.recyclerview.widget.DiffUtil;
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
 
-public class TaskViewModel extends ViewModel implements ValueEventListener,
+public class TaskViewModel extends ViewModel implements
         NewTaskDialog.AddNewTaskListener, RecyclerViewAdapter.UpdateTaskListener{
 
     private static final String TAG = TaskViewModel.class.getSimpleName();
     protected static final String TASKS_CHILD = "tasks";
 
-    // Persist data using a data source, either Room or in the cloud or both
-    private DatabaseReference mFirebaseDatabaseReference;
-
-    private MutableLiveData<List<Task>> mTasksLiveData;
+    private TaskDataSource mTaskDataSource;
     protected List<Task>  mTasks;
 
-    public TaskViewModel(DatabaseReference firebaseDatabaseReference) {
-        mFirebaseDatabaseReference = firebaseDatabaseReference;
-        mTasksLiveData = new MutableLiveData<>();
-        mTasks = new LinkedList<>();
+
+    public TaskViewModel(Application application, TaskDataSource taskDataSource) {
+        mTaskDataSource = taskDataSource;
+        mTasks = new ArrayList<>();
     }
 
-    public LiveData<List<Task>> getTasksLiveData() {
-        return mTasksLiveData;
+    public Flowable<List<Task>> getAllTasks() {
+        return mTaskDataSource.getAllTasks();
     }
 
-    public void addTask(String taskDetail) {
+    public Completable addTask(String taskDetail) {
         Date now = new Date();
         Task task = new Task();
         task.setDetail(taskDetail);
@@ -49,11 +38,10 @@ public class TaskViewModel extends ViewModel implements ValueEventListener,
         task.setPriority(mTasks.size());
 
         mTasks.add(task);
-        mFirebaseDatabaseReference.push().setValue(task);
+        return mTaskDataSource.insert(task);
     }
 
-    public void updateTask(int position, boolean isDone) {
-        Task t = mTasks.get(position);
+    public Completable updateTask(Task t, boolean isDone) {
         t.setIsDone(isDone);
         if (isDone) {
             Date now = new Date();
@@ -61,30 +49,6 @@ public class TaskViewModel extends ViewModel implements ValueEventListener,
         } else {
             t.setFinishedTime(0);
         }
-        mFirebaseDatabaseReference.child(t.getKey()).setValue(t);
+        return mTaskDataSource.update(t);
     }
-
-    public void addValueEventListener() {
-        mFirebaseDatabaseReference.addValueEventListener(this);
-    }
-
-    public void removeValueEventListener() {
-        mFirebaseDatabaseReference.removeEventListener(this);
-    }
-
-    @Override
-    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        mTasks = new LinkedList<>();
-        for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-            Task t = Task.fromSnapshot(snapshot);
-            mTasks.add(t);
-        }
-        mTasksLiveData.setValue(mTasks);
-    }
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
-        Log.w(TAG, "database error", databaseError.toException());
-    }
-
 }

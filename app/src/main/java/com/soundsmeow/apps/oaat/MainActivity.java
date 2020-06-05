@@ -2,10 +2,13 @@ package com.soundsmeow.apps.oaat;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -17,8 +20,9 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = "MainActivity";
     private SharedPreferences mSharedPreferences;
+    private ExampleLooperThread looperThread = new ExampleLooperThread();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,39 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.start_thread:
+                startThread();
+                break;
+            case R.id.task_A:
+                taskA();
+                break;
+            case R.id.task_B:
+                taskB();
+                break;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startThread() {
+        Log.d(TAG, "startThread: looperThread");
+        looperThread.start();
+    }
+
+    private void taskA() {
+        Toast.makeText(this, "TaskA", Toast.LENGTH_SHORT).show();
+        looperThread.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    Log.d(TAG, "run: " + i);
+                    SystemClock.sleep(1000);
+                }
+            }
+        });
+    }
+
+    private void taskB() {
+        Toast.makeText(this, "TaskB", Toast.LENGTH_SHORT).show();
     }
 }

@@ -2,6 +2,7 @@ package com.soundsmeow.apps.oaat.ui.task;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,14 @@ import android.widget.EditText;
 import com.soundsmeow.apps.oaat.R;
 
 import androidx.fragment.app.DialogFragment;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class NewTaskDialog extends DialogFragment {
 
     public interface AddNewTaskListener {
-        void addTask(String taskDetail);
+        Completable addTask(String taskDetail);
     }
 
     public static final String DIALOG_TAG = "Dialog";
@@ -43,8 +47,13 @@ public class NewTaskDialog extends DialogFragment {
             public void onClick(View v) {
                 String newTask = taskInput.getText().toString();
                 if (!TextUtils.isEmpty(newTask)) {
-                    listener.addTask(newTask);
-                    dismiss();
+                    listener.addTask(newTask)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(() -> NewTaskDialog.this.dismiss(),
+                                    throwable -> Log.e("DEBUG",
+                                            "something wrong happened "
+                                                    + throwable.getMessage()));
                 }
             }
         });

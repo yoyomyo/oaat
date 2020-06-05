@@ -1,18 +1,38 @@
 package com.soundsmeow.apps.oaat.ui.task;
 
-
 import com.google.firebase.database.DataSnapshot;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Task {
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     private String key;
+    @ColumnInfo(name = "priority")
     private int priority;
+    @ColumnInfo(name = "detail")
     private String detail;
+    @ColumnInfo(name = "is_done")
     private boolean isDone;
 
     // For computing stats
+    @ColumnInfo(name = "created_time")
     private long createdTime;
+    @ColumnInfo(name = "finished_time")
     private long finishedTime;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public void setKey(String id) {
         this.key = id;
@@ -62,7 +82,6 @@ public class Task {
         return finishedTime;
     }
 
-    // How to test this?
     public static Task fromSnapshot(DataSnapshot snapshot) {
         Task task = new Task();
 

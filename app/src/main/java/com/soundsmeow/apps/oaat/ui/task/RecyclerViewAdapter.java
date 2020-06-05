@@ -2,6 +2,7 @@ package com.soundsmeow.apps.oaat.ui.task;
 
 import android.app.Activity;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,14 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface UpdateTaskListener {
-        void updateTask(int taskPosition, boolean isDone);
+        Completable updateTask(Task task, boolean isDone);
     }
 
     private UpdateTaskListener listener;
@@ -63,7 +67,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 updateTaskViewHolder(taskViewHolder.detail, isChecked);
                 taskList.set(position, task);
-                listener.updateTask(position, isChecked);
+                listener.updateTask(taskList.get(position), isChecked)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(()-> Log.d("DEBUG", "successfully updated task"));
             }
         });
     }
