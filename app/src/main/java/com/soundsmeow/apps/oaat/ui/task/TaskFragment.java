@@ -52,13 +52,14 @@ public class TaskFragment extends Fragment {
             if (recyclerViewAdapter.getTaskList() == null) {
                 recyclerViewAdapter.setTaskList(tasks);
                 recyclerViewAdapter.notifyDataSetChanged();
-            } else if (tasks != null) {
-                // A list already exists
-                DiffUtil.DiffResult result = DiffUtil.calculateDiff(
-                        new TasksDiffCallback(recyclerViewAdapter.getTaskList(), tasks));
-                recyclerViewAdapter.setTaskList(tasks);
-                result.dispatchUpdatesTo(recyclerViewAdapter);
             }
+//            } else if (tasks != null) {
+//                // A list already exists
+//                DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+//                        new TasksDiffCallback(recyclerViewAdapter.getTaskList(), tasks));
+//                recyclerViewAdapter.setTaskList(tasks);
+//                result.dispatchUpdatesTo(recyclerViewAdapter);
+//            }
         };
         TaskViewModelFactory factory = new TaskViewModelFactory(this.getActivity().getApplication(),
                 FirebaseDatabase.getInstance().getReference().child(TASKS_CHILD));
