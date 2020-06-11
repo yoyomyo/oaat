@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.soundsmeow.apps.oaat.R;
 
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -60,6 +61,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final TaskViewHolder taskViewHolder = (TaskViewHolder) holder;
         taskViewHolder.detail.setText(task.getDetail());
         taskViewHolder.isDone.setChecked(task.getIsDone());
+        taskViewHolder.timestamp.setText(new Date(task.getFinishedTime()).toString());
         updateTaskViewHolder(taskViewHolder.detail, task.getIsDone());
         taskViewHolder.isDone.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
@@ -94,12 +96,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public class TaskViewHolder extends RecyclerView.ViewHolder {
 
         TextView detail;
+        TextView timestamp;
         CheckBox isDone;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             detail = itemView.findViewById(R.id.task_detail);
             isDone = itemView.findViewById(R.id.is_task_done);
+            timestamp = itemView.findViewById(R.id.task_finished_time);
         }
     }
 }
