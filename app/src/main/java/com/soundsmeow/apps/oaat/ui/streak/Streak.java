@@ -1,4 +1,4 @@
-package com.soundsmeow.apps.oaat.ui.task;
+package com.soundsmeow.apps.oaat.ui.streak;
 
 import com.google.firebase.database.DataSnapshot;
 
@@ -7,7 +7,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Task {
+public class Streak {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -82,27 +82,27 @@ public class Task {
         return finishedTime;
     }
 
-    public static Task fromSnapshot(DataSnapshot snapshot) {
-        Task task = new Task();
+    public static Streak fromSnapshot(DataSnapshot snapshot) {
+        Streak streak = new Streak();
 
         String detail = snapshot.child("detail").getValue(String.class);
         boolean isDone = snapshot.child("isDone").getValue(Boolean.class);
         int priority = snapshot.child("priority").getValue(Integer.class);
         long createdTime = snapshot.child("createdTime").getValue(Long.class);
         long finishedTime = snapshot.child("finishedTime").getValue(Long.class);
-        task.setKey(snapshot.getKey());
-        task.setDetail(detail);
-        task.setIsDone(isDone);
-        task.setPriority(priority);
-        task.setCreatedTime((long)createdTime);
-        task.setFinishedTime((long)finishedTime);
-        return task;
+        streak.setKey(snapshot.getKey());
+        streak.setDetail(detail);
+        streak.setIsDone(isDone);
+        streak.setPriority(priority);
+        streak.setCreatedTime((long)createdTime);
+        streak.setFinishedTime((long)finishedTime);
+        return streak;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof  Task) {
-            Task t = (Task) obj;
+        if (obj instanceof Streak) {
+            Streak t = (Streak) obj;
             return t.getDetail() != null
                     && detail.equals(t.getDetail())
                     && isDone == t.isDone

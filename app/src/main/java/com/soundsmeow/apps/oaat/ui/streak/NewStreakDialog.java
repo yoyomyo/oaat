@@ -1,4 +1,4 @@
-package com.soundsmeow.apps.oaat.ui.task;
+package com.soundsmeow.apps.oaat.ui.streak;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,17 +15,17 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class NewTaskDialog extends DialogFragment {
+public class NewStreakDialog extends DialogFragment {
 
-    public interface AddNewTaskListener {
-        Completable addTask(String taskDetail);
+    public interface AddNewBuddyListener {
+        Completable addStreak(String taskDetail);
     }
 
     public static final String DIALOG_TAG = "Dialog";
-    private AddNewTaskListener listener;
+    private AddNewBuddyListener listener;
 
-    static NewTaskDialog newInstance(AddNewTaskListener listener) {
-        NewTaskDialog dialog = new NewTaskDialog();
+    static NewStreakDialog newInstance(AddNewBuddyListener listener) {
+        NewStreakDialog dialog = new NewStreakDialog();
         dialog.listener = listener;
         return dialog;
     }
@@ -47,10 +47,10 @@ public class NewTaskDialog extends DialogFragment {
             public void onClick(View v) {
                 String newTask = taskInput.getText().toString();
                 if (!TextUtils.isEmpty(newTask)) {
-                    listener.addTask(newTask)
+                    listener.addStreak(newTask)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(() -> NewTaskDialog.this.dismiss(),
+                            .subscribe(() -> NewStreakDialog.this.dismiss(),
                                     throwable -> Log.e("DEBUG",
                                             "something wrong happened "
                                                     + throwable.getMessage()));

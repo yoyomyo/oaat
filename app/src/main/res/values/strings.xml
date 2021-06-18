@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">One At A Time</string>
-    <string name="title_tasks">Tasks</string>
+    <string name="app_name">Accountability Buddies</string>
+    <string name="title_streaks">Streaks</string>
     <string name="title_stats">Stats</string>
-    <string name="create_task">Create Task</string>
-    <string name="sign_in_message">Sign in to preserve tasks</string>
+    <string name="create_streak">Create</string>
+    <string name="sign_in_message">Sign in to start</string>
     <string name="sign_out">Sign out</string>
-    <string name="task_hint">Enter a task</string>
+    <string name="streak_hint">Add a streak</string>
 </resources>

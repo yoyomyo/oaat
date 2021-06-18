@@ -1,4 +1,4 @@
-package com.soundsmeow.apps.oaat.ui.task;
+package com.soundsmeow.apps.oaat.ui.streak;
 
 import android.app.Application;
 
@@ -16,28 +16,29 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
 
-public class TaskViewModelTest {
+public class StreakViewModelTest {
 
     private static final String TASK_DETAIl = "Make coookies";
-    private TaskViewModel taskViewModel;
+    private StreakViewModel taskViewModel;
     @Mock DatabaseReference mockDatabaseReference;
     @Mock Application application;
 
-    @Mock TaskDataSource mockDataSource;
+    @Mock
+    StreakDataSource mockDataSource;
 
     @Before
     public void setUp() {
-        mockDataSource = Mockito.mock(TaskDataSource.class);
-        Mockito.when(mockDataSource.insert(any(Task.class))).thenReturn(Completable.complete());
-        taskViewModel = new TaskViewModel(application, mockDataSource);
+        mockDataSource = Mockito.mock(StreakDataSource.class);
+        Mockito.when(mockDataSource.insert(any(Streak.class))).thenReturn(Completable.complete());
+        taskViewModel = new StreakViewModel(application, mockDataSource);
     }
 
     @Test
     public void testAddTask() {
-        taskViewModel.addTask(TASK_DETAIl);
-        assertNotNull(taskViewModel.mTasks);
-        assertEquals(1, taskViewModel.mTasks.size());
-        Task t = taskViewModel.mTasks.get(0);
+        taskViewModel.addStreak(TASK_DETAIl);
+        assertNotNull(taskViewModel.mStreaks);
+        assertEquals(1, taskViewModel.mStreaks.size());
+        Streak t = taskViewModel.mStreaks.get(0);
         Mockito.verify(mockDataSource).insert(t);
     }
 

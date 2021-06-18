@@ -1,16 +1,16 @@
-package com.soundsmeow.apps.oaat.ui.task;
+package com.soundsmeow.apps.oaat.ui.streak;
 
 import java.util.List;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-public class TasksDiffCallback extends DiffUtil.Callback {
+public class StreakDiffCallback extends DiffUtil.Callback {
 
-    List<Task> oldList;
-    List<Task> newList;
+    List<Streak> oldList;
+    List<Streak> newList;
 
 
-    public TasksDiffCallback(List<Task> oldL, List<Task> newL) {
+    public StreakDiffCallback(List<Streak> oldL, List<Streak> newL) {
         this.oldList = oldL;
         this.newList = newL;
     }
@@ -27,11 +27,11 @@ public class TasksDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
+        return oldList.get(oldItemPosition).getDetail().equals(newList.get(newItemPosition).getDetail());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
+        return oldList.get(oldItemPosition).getDetail().equals(newList.get(newItemPosition).getDetail());
     }
 }

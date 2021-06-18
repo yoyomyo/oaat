@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.soundsmeow.apps.oaat.ui.task.TaskFragment"
-        android:label="@string/title_tasks"
-        tools:layout="@layout/fragment_tasks" />
+        android:name="com.soundsmeow.apps.oaat.ui.streak.StreakFragment"
+        android:label="@string/title_streaks"
+        tools:layout="@layout/fragment_buddies" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
