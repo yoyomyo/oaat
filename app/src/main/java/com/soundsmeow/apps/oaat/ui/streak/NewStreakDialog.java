@@ -17,14 +17,14 @@ import io.reactivex.schedulers.Schedulers;
 
 public class NewStreakDialog extends DialogFragment {
 
-    public interface AddNewBuddyListener {
-        Completable addStreak(String taskDetail);
+    public interface AddNewStreakListener {
+        Completable addStreak(String streakDetail);
     }
 
     public static final String DIALOG_TAG = "Dialog";
-    private AddNewBuddyListener listener;
+    private AddNewStreakListener listener;
 
-    static NewStreakDialog newInstance(AddNewBuddyListener listener) {
+    static NewStreakDialog newInstance(AddNewStreakListener listener) {
         NewStreakDialog dialog = new NewStreakDialog();
         dialog.listener = listener;
         return dialog;

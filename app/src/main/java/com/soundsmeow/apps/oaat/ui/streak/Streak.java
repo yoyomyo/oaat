@@ -13,12 +13,11 @@ public class Streak {
     private int id;
 
     private String key;
-    @ColumnInfo(name = "priority")
-    private int priority;
+
     @ColumnInfo(name = "detail")
     private String detail;
-    @ColumnInfo(name = "is_done")
-    private boolean isDone;
+    @ColumnInfo(name = "count")
+    private int count;
 
     // For computing stats
     @ColumnInfo(name = "created_time")
@@ -42,16 +41,12 @@ public class Streak {
         return key;
     }
 
-    public void setPriority(int p) {
-        priority = p;
-    }
-
     public void setDetail(String d) {
         detail = d;
     }
 
-    public void setIsDone(boolean b) {
-        isDone = b;
+    public void setCount(int c) {
+        count = c;
     }
 
     public void setCreatedTime(long d) {
@@ -62,16 +57,12 @@ public class Streak {
         finishedTime = d;
     }
 
-    public int getPriority() {
-        return priority;
-    }
-
     public String getDetail() {
         return detail;
     }
 
-    public boolean getIsDone() {
-        return isDone;
+    public int getCount() {
+        return count;
     }
 
     public long getCreatedTime() {
@@ -86,14 +77,12 @@ public class Streak {
         Streak streak = new Streak();
 
         String detail = snapshot.child("detail").getValue(String.class);
-        boolean isDone = snapshot.child("isDone").getValue(Boolean.class);
-        int priority = snapshot.child("priority").getValue(Integer.class);
+        int count = snapshot.child("count").getValue(Integer.class);
         long createdTime = snapshot.child("createdTime").getValue(Long.class);
         long finishedTime = snapshot.child("finishedTime").getValue(Long.class);
         streak.setKey(snapshot.getKey());
         streak.setDetail(detail);
-        streak.setIsDone(isDone);
-        streak.setPriority(priority);
+        streak.setCount(count);
         streak.setCreatedTime((long)createdTime);
         streak.setFinishedTime((long)finishedTime);
         return streak;
@@ -105,7 +94,7 @@ public class Streak {
             Streak t = (Streak) obj;
             return t.getDetail() != null
                     && detail.equals(t.getDetail())
-                    && isDone == t.isDone
+                    && count == t.getCount()
                     && createdTime == t.createdTime;
         }
         return false;

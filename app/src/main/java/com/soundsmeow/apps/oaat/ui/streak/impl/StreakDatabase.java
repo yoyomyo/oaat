@@ -8,9 +8,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Streak.class}, version = 2)
-//@TypeConverters(DateConverter.class)
+@Database(entities = {Streak.class}, version = 3)
 public abstract class StreakDatabase extends RoomDatabase {
+
+    private static final String DB_NAME = "streak";
 
     public abstract StreakDao streakDao();
 
@@ -26,9 +27,8 @@ public abstract class StreakDatabase extends RoomDatabase {
 
     // Create the database
     static StreakDatabase create(Context context) {
-        RoomDatabase.Builder<StreakDatabase> builder = Room.databaseBuilder(context.getApplicationContext(),
-                StreakDatabase.class,
-                "streak");
+        RoomDatabase.Builder<StreakDatabase> builder = Room
+                .databaseBuilder(context.getApplicationContext(), StreakDatabase.class, DB_NAME);
         return builder.build();
     }
 }
