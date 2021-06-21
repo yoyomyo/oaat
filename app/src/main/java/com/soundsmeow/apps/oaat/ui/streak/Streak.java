@@ -95,7 +95,7 @@ public class Streak {
             return t.getDetail() != null
                     && detail.equals(t.getDetail())
                     && count == t.getCount()
-                    && createdTime == t.createdTime;
+                    && finishedTime == t.finishedTime;
         }
         return false;
     }

@@ -16,7 +16,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface StreakDao {
     // Select all from Task table and order by "complete by" date
-    @Query("SELECT * FROM Streak ORDER By Streak.finished_time")
+    @Query("SELECT * FROM Streak ORDER By Streak.created_time")
     Flowable<List<Streak>> getAllTasks();
 
     // Select one task from Task table by id

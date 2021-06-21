@@ -18,13 +18,18 @@ public class StatsFragment extends Fragment {
 
     private StatsViewModel statsViewModel;
 
+    public static StatsFragment newInstance() {
+        StatsFragment fragment = new StatsFragment();
+        return fragment;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         statsViewModel =
                 ViewModelProviders.of(this).get(StatsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_stats, container, false);
         final TextView textView = root.findViewById(R.id.text_dashboard);
-        statsViewModel.getText().observe(this, new Observer<String>() {
+        statsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

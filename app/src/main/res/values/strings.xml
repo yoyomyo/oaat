@@ -2,8 +2,11 @@
     <string name="app_name">Accountability Buddies</string>
     <string name="title_streaks">Streaks</string>
     <string name="title_stats">Stats</string>
+    <string name="title_buddies">Buddies</string>
     <string name="create_streak">Create</string>
     <string name="sign_in_message">Sign in to start</string>
+    <string name="sign_in_failed">Sign in failed</string>
     <string name="sign_out">Sign out</string>
     <string name="streak_hint">Add a streak</string>
+    <string name="last_updated_time">Last updated: %s</string>
 </resources>

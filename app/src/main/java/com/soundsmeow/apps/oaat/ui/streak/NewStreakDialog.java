@@ -45,9 +45,9 @@ public class NewStreakDialog extends DialogFragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newTask = taskInput.getText().toString();
-                if (!TextUtils.isEmpty(newTask)) {
-                    listener.addStreak(newTask)
+                String newStreak = taskInput.getText().toString();
+                if (!TextUtils.isEmpty(newStreak)) {
+                    listener.addStreak(newStreak)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(() -> NewStreakDialog.this.dismiss(),

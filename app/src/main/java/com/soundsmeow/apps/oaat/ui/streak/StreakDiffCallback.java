@@ -32,6 +32,6 @@ public class StreakDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getDetail().equals(newList.get(newItemPosition).getDetail());
+        return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
     }
 }

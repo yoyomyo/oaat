@@ -1,6 +1,7 @@
 package com.soundsmeow.apps.oaat.ui.streak;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,17 +9,20 @@ import android.widget.TextView;
 
 import com.soundsmeow.apps.oaat.R;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface UpdateStreakListener {
-        Completable updateStreak(Streak streak, int count);
+        Completable updateStreak(Streak streak);
     }
 
     private UpdateStreakListener listener;
@@ -45,8 +49,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View taskView = LayoutInflater.from(context).inflate(R.layout.item_task, parent, false);
-        return new StreakViewHolder(taskView);
+        View taskView = LayoutInflater.from(context).inflate(R.layout.item_streak, parent, false);
+        return new StreakViewHolder(taskView, -1);
     }
 
     @Override
@@ -56,19 +60,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         taskViewHolder.detail.setText(streak.getDetail());
         taskViewHolder.count.setText(streak.getCount()+"");
-        taskViewHolder.timestamp.setText(new Date(streak.getFinishedTime()).toString());
-//        taskViewHolder.isDone.setOnCheckedChangeListener(
-//                new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                updateStreakViewHolder(taskViewHolder.detail, isChecked);
-//                streakList.set(position, streak);
-//                listener.updateTask(streakList.get(position), isChecked)
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(()-> Log.d("DEBUG", "successfully updated task"));
-//            }
-//        });
+        taskViewHolder.timestamp.setText(context.getString(
+                R.string.last_updated_time,
+                daysElapsed(new Date(streak.getFinishedTime()))));
+        taskViewHolder.rootView.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //updateStreakViewHolder(taskViewHolder.detail);
+                        streakList.set(position, streak);
+                        listener.updateStreak(streakList.get(position))
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(()-> Log.d("DEBUG", "successfully updated task"));
+                    }
+                });
+
+    }
+
+    private String daysElapsed(Date lastTime) {
+        Date now = new Date();
+        int daysElapsed = now.getDate() - lastTime.getDate();
+        if (daysElapsed <= 0) {
+            return "today";
+        } else if (daysElapsed == 1) {
+            return "yesterday";
+        } else {
+            return daysElapsed + " days ago";
+        }
     }
 
     @Override
@@ -81,15 +100,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public class StreakViewHolder extends RecyclerView.ViewHolder {
 
+        View rootView;
         TextView detail;
         TextView timestamp;
         TextView count;
 
-        public StreakViewHolder(@NonNull View itemView) {
+        public StreakViewHolder(@NonNull View itemView, int pos) {
             super(itemView);
+            rootView = itemView.findViewById(R.id.streak);
             detail = itemView.findViewById(R.id.streak_detail);
             count = itemView.findViewById(R.id.streak_count);
-            timestamp = itemView.findViewById(R.id.last_finished_time);
+            timestamp = itemView.findViewById(R.id.last_update_time);
         }
     }
 }

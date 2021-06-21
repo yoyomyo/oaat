@@ -20,16 +20,10 @@ public class StreakViewModel extends ViewModel implements
     private static final String TAG = StreakViewModel.class.getSimpleName();
     protected static final String TASKS_CHILD = "tasks";
 
-    private FirebaseUser mUser;
     private StreakDataSource mStreakDataSource;
     protected List<Streak> mStreaks;
 
-
     public StreakViewModel(Application application, StreakDataSource streakDataSource) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        if (firebaseAuth != null) {
-            mUser = firebaseAuth.getCurrentUser();
-        }
         mStreakDataSource = streakDataSource;
         mStreaks = new ArrayList<>();
     }
@@ -44,19 +38,15 @@ public class StreakViewModel extends ViewModel implements
         streak.setDetail(taskDetail);
         streak.setCount(0);
         streak.setCreatedTime(now.getTime());
-
+        streak.setFinishedTime(now.getTime());
         mStreaks.add(streak);
         return mStreakDataSource.insert(streak);
     }
 
-    public Completable updateStreak(Streak t, int oldCount) {
-        t.setCount(oldCount+1);
+    public Completable updateStreak(Streak t) {
+        t.setCount(t.getCount() + 1);
         Date now = new Date();
         t.setFinishedTime(now.getTime());
         return mStreakDataSource.update(t);
-    }
-
-    public Uri getUserAvatarUrl() {
-        return mUser.getPhotoUrl();
     }
 }

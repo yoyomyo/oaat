@@ -1,6 +1,8 @@
 package com.soundsmeow.apps.oaat.ui.streak;
 
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +22,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.database.FirebaseDatabase;
 import com.soundsmeow.apps.oaat.R;
 
@@ -39,13 +40,18 @@ public class StreakFragment extends Fragment {
 
     private final CompositeDisposable mDisposable = new CompositeDisposable();
 
+
+    public static StreakFragment newInstance() {
+        StreakFragment fragment = new StreakFragment();
+        return fragment;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_buddies, container, false);
+        View root = inflater.inflate(R.layout.fragment_streaks, container, false);
         progressBar = root.findViewById(R.id.progress_bar);
 
-        streakList = root.findViewById(R.id.buddy_list);
-        userAvatar = root.findViewById(R.id.user_avatar);
+        streakList = root.findViewById(R.id.streak_list);
 
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), null);
 
@@ -61,8 +67,8 @@ public class StreakFragment extends Fragment {
                 // A list already exists
                 DiffUtil.DiffResult result = DiffUtil.calculateDiff(
                         new StreakDiffCallback(recyclerViewAdapter.getStreakList(), streaks));
-                recyclerViewAdapter.setStreakList(streaks);
                 result.dispatchUpdatesTo(recyclerViewAdapter);
+                recyclerViewAdapter.notifyDataSetChanged();
             }
         };
         StreakViewModelFactory factory = new StreakViewModelFactory(this.getActivity().getApplication(),
@@ -80,18 +86,9 @@ public class StreakFragment extends Fragment {
         View fab = root.findViewById(R.id.add_streak_button);
         fab.setOnClickListener(v -> showDialog(streakViewModel));
 
-        loadUI();
-
         return root;
     }
 
-    private void loadUI() {
-        if (streakViewModel.getUserAvatarUrl() != null) {
-            Glide.with(userAvatar.getContext())
-                    .load(streakViewModel.getUserAvatarUrl())
-                    .into(userAvatar);
-        }
-    }
     @Override
     public void onResume() {
         super.onResume();

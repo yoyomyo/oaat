@@ -10,29 +10,29 @@ import io.reactivex.Flowable;
 
 public class StreakDataSourceImpl implements StreakDataSource {
 
-    private StreakDao mTaskDao;
+    private StreakDao mStreakDao;
 
     public StreakDataSourceImpl(StreakDao taskDao) {
-        mTaskDao = taskDao;
+        mStreakDao = taskDao;
     }
 
     @Override
     public Flowable<List<Streak>> getAllTasks() {
-        return mTaskDao.getAllTasks();
+        return mStreakDao.getAllTasks();
     }
 
     @Override
     public Completable insert(Streak streak) {
-        return mTaskDao.insertAll(streak);
+        return mStreakDao.insertAll(streak);
     }
 
     @Override
     public Completable update(Streak streak) {
-        return mTaskDao.update(streak);
+        return mStreakDao.update(streak);
     }
 
     @Override
     public Completable deleteTask(Streak streak) {
-        return mTaskDao.delete(streak);
+        return mStreakDao.delete(streak);
     }
 }
