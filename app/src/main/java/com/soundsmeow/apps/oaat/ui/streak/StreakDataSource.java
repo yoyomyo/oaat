@@ -7,7 +7,7 @@ import io.reactivex.Flowable;
 
 public interface StreakDataSource {
 
-    Flowable<List<Streak>> getAllTasks();
+    Flowable<List<Streak>> getAllTasks(String uid);
 
     /**
      * Inserts the task into the data source, or, if this is an existing task, updates it.

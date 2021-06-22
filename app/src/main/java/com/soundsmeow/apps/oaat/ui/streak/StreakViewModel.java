@@ -20,21 +20,24 @@ public class StreakViewModel extends ViewModel implements
     private static final String TAG = StreakViewModel.class.getSimpleName();
     protected static final String TASKS_CHILD = "tasks";
 
+    private FirebaseUser mUser;
     private StreakDataSource mStreakDataSource;
     protected List<Streak> mStreaks;
 
     public StreakViewModel(Application application, StreakDataSource streakDataSource) {
         mStreakDataSource = streakDataSource;
         mStreaks = new ArrayList<>();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public Flowable<List<Streak>> getAllTasks() {
-        return mStreakDataSource.getAllTasks();
+        return mStreakDataSource.getAllTasks(mUser.getUid());
     }
 
     public Completable addStreak(String taskDetail) {
         Date now = new Date();
         Streak streak = new Streak();
+        streak.setUid(mUser.getUid());
         streak.setDetail(taskDetail);
         streak.setCount(0);
         streak.setCreatedTime(now.getTime());

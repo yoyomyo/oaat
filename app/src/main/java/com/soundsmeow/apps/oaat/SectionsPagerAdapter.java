@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.soundsmeow.apps.oaat.R;
+import com.soundsmeow.apps.oaat.ui.buddies.BuddiesFragment;
 import com.soundsmeow.apps.oaat.ui.stats.StatsFragment;
 import com.soundsmeow.apps.oaat.ui.streak.StreakFragment;
 
@@ -42,7 +43,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case STATS:
                 return StatsFragment.newInstance();
             case BUDDIES:
-                return StreakFragment.newInstance();
+                return BuddiesFragment.newInstance();
             default:
                 throw new IllegalStateException("Unexpected value: " + position);
         }

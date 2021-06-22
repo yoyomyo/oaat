@@ -17,8 +17,8 @@ public class StreakDataSourceImpl implements StreakDataSource {
     }
 
     @Override
-    public Flowable<List<Streak>> getAllTasks() {
-        return mStreakDao.getAllTasks();
+    public Flowable<List<Streak>> getAllTasks(String uid) {
+        return mStreakDao.getAllTasks(uid);
     }
 
     @Override

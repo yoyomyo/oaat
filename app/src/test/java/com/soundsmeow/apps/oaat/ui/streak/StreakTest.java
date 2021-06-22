@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 public class StreakTest {
-    private static final String KEY = "abc";
+    private static final String KEY = "userA";
     private static final String DETAIL = "Make coookies";
     private static final long CREATED_TIME = 1234567;
     private static final long FINISHED_TIME = 7654321;
@@ -17,18 +17,14 @@ public class StreakTest {
     @Before
     public void setUp() {
         streak1 = new Streak();
-        streak1.setKey(KEY);
+        streak1.setUid(KEY);
         streak1.setDetail(DETAIL);
-        streak1.setIsDone(false);
-        streak1.setPriority(0);
         streak1.setCreatedTime(CREATED_TIME);
         streak1.setFinishedTime(FINISHED_TIME);
 
         streak2 = new Streak();
-        streak2.setKey(KEY);
+        streak2.setUid(KEY);
         streak2.setDetail(DETAIL);
-        streak2.setIsDone(false);
-        streak2.setPriority(0);
         streak2.setCreatedTime(CREATED_TIME);
         streak2.setFinishedTime(FINISHED_TIME);
     }
@@ -40,13 +36,7 @@ public class StreakTest {
 
     @Test
     public void testEquals_withDifferentKey() {
-        streak2.setKey("bca");
-        assertEquals(streak1, streak2);
-    }
-
-    @Test
-    public void testEquals_withDifferentPriority() {
-        streak2.setPriority(1);
+        streak2.setUid("bca");
         assertEquals(streak1, streak2);
     }
 

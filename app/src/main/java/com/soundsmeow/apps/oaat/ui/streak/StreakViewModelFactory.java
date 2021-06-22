@@ -2,6 +2,7 @@ package com.soundsmeow.apps.oaat.ui.streak;
 
 import android.app.Application;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.soundsmeow.apps.oaat.ui.streak.impl.StreakDataSourceImpl;
 import com.soundsmeow.apps.oaat.ui.streak.impl.StreakDatabase;

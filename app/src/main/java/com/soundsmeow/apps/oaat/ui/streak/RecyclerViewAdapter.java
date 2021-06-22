@@ -63,16 +63,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         taskViewHolder.timestamp.setText(context.getString(
                 R.string.last_updated_time,
                 daysElapsed(new Date(streak.getFinishedTime()))));
-        taskViewHolder.rootView.setOnClickListener(
-                new View.OnClickListener() {
+        taskViewHolder.rootView.setOnLongClickListener(
+                new View.OnLongClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        //updateStreakViewHolder(taskViewHolder.detail);
+                    public boolean onLongClick(View v) {
                         streakList.set(position, streak);
                         listener.updateStreak(streakList.get(position))
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(()-> Log.d("DEBUG", "successfully updated task"));
+                        return true;
                     }
                 });
 

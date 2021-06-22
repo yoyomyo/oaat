@@ -12,14 +12,14 @@ public class Streak {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    private String key;
+    @ColumnInfo(name = "uid")
+    private String uid;
 
     @ColumnInfo(name = "detail")
     private String detail;
     @ColumnInfo(name = "count")
     private int count;
 
-    // For computing stats
     @ColumnInfo(name = "created_time")
     private long createdTime;
     @ColumnInfo(name = "finished_time")
@@ -33,12 +33,12 @@ public class Streak {
         return id;
     }
 
-    public void setKey(String id) {
-        this.key = id;
+    public void setUid(String id) {
+        this.uid = id;
     }
 
-    public String getKey() {
-        return key;
+    public String getUid() {
+        return uid;
     }
 
     public void setDetail(String d) {
@@ -80,7 +80,7 @@ public class Streak {
         int count = snapshot.child("count").getValue(Integer.class);
         long createdTime = snapshot.child("createdTime").getValue(Long.class);
         long finishedTime = snapshot.child("finishedTime").getValue(Long.class);
-        streak.setKey(snapshot.getKey());
+        streak.setUid(snapshot.child("uid").getValue(String.class));
         streak.setDetail(detail);
         streak.setCount(count);
         streak.setCreatedTime((long)createdTime);

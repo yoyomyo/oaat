@@ -36,7 +36,6 @@ public class StreakFragment extends Fragment {
     private RecyclerView streakList;
     private RecyclerViewAdapter recyclerViewAdapter;
     private ProgressBar progressBar;
-    private ImageView userAvatar;
 
     private final CompositeDisposable mDisposable = new CompositeDisposable();
 
@@ -58,7 +57,7 @@ public class StreakFragment extends Fragment {
         streakList.setLayoutManager(new LinearLayoutManager(getActivity()));
         streakList.setAdapter(recyclerViewAdapter);
 
-        final Observer<List<Streak>> taskListObserver = streaks -> {
+        final Observer<List<Streak>> streakListObserver = streaks -> {
             progressBar.setVisibility(View.GONE);
             if (recyclerViewAdapter.getStreakList() == null) {
                 recyclerViewAdapter.setStreakList(streaks);
@@ -67,6 +66,7 @@ public class StreakFragment extends Fragment {
                 // A list already exists
                 DiffUtil.DiffResult result = DiffUtil.calculateDiff(
                         new StreakDiffCallback(recyclerViewAdapter.getStreakList(), streaks));
+                recyclerViewAdapter.setStreakList(streaks);
                 result.dispatchUpdatesTo(recyclerViewAdapter);
                 recyclerViewAdapter.notifyDataSetChanged();
             }
@@ -79,7 +79,7 @@ public class StreakFragment extends Fragment {
         mDisposable.add(streakViewModel.getAllTasks()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(taskList -> taskListObserver.onChanged(taskList)));
+                .subscribe(streakList -> streakListObserver.onChanged(streakList)));
 
         recyclerViewAdapter.setListener(streakViewModel);
 
