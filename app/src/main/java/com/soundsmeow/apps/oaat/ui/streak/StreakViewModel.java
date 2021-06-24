@@ -1,7 +1,6 @@
 package com.soundsmeow.apps.oaat.ui.streak;
 
 import android.app.Application;
-import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,7 +14,7 @@ import io.reactivex.Completable;
 import io.reactivex.Flowable;
 
 public class StreakViewModel extends ViewModel implements
-        NewStreakDialog.AddNewStreakListener, RecyclerViewAdapter.UpdateStreakListener {
+        NewStreakDialog.AddNewStreakListener, StreakRecyclerViewAdapter.UpdateStreakListener {
 
     private static final String TAG = StreakViewModel.class.getSimpleName();
     protected static final String TASKS_CHILD = "tasks";

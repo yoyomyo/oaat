@@ -1,13 +1,10 @@
 package com.soundsmeow.apps.oaat.ui.streak;
 
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -34,7 +31,7 @@ public class StreakFragment extends Fragment {
     private static final String TAG = StreakFragment.class.getSimpleName();
     private StreakViewModel streakViewModel;
     private RecyclerView streakList;
-    private RecyclerViewAdapter recyclerViewAdapter;
+    private StreakRecyclerViewAdapter recyclerViewAdapter;
     private ProgressBar progressBar;
 
     private final CompositeDisposable mDisposable = new CompositeDisposable();
@@ -52,7 +49,7 @@ public class StreakFragment extends Fragment {
 
         streakList = root.findViewById(R.id.streak_list);
 
-        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), null);
+        recyclerViewAdapter = new StreakRecyclerViewAdapter(getActivity(), null);
 
         streakList.setLayoutManager(new LinearLayoutManager(getActivity()));
         streakList.setAdapter(recyclerViewAdapter);

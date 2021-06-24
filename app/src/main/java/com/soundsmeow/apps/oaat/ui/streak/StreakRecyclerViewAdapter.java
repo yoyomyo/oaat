@@ -19,7 +19,7 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class StreakRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface UpdateStreakListener {
         Completable updateStreak(Streak streak);
@@ -41,7 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.listener = listener;
     }
 
-    public RecyclerViewAdapter(Activity context, List<Streak> data) {
+    public StreakRecyclerViewAdapter(Activity context, List<Streak> data) {
         this.context = context;
         this.streakList = data;
     }
@@ -56,14 +56,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final Streak streak = streakList.get(position);
-        final StreakViewHolder taskViewHolder = (StreakViewHolder) holder;
+        final StreakViewHolder streakViewHolder = (StreakViewHolder) holder;
 
-        taskViewHolder.detail.setText(streak.getDetail());
-        taskViewHolder.count.setText(streak.getCount()+"");
-        taskViewHolder.timestamp.setText(context.getString(
+        streakViewHolder.detail.setText(streak.getDetail());
+        streakViewHolder.count.setText(streak.getCount()+"");
+        streakViewHolder.timestamp.setText(context.getString(
                 R.string.last_updated_time,
                 daysElapsed(new Date(streak.getFinishedTime()))));
-        taskViewHolder.rootView.setOnLongClickListener(
+        streakViewHolder.rootView.setOnLongClickListener(
                 new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
