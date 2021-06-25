@@ -18,6 +18,10 @@ public class BuddyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private List<Buddy> buddyList;
 
+    public BuddyRecyclerViewAdapter(List<Buddy> data) {
+        this.buddyList = data;
+    }
+
     public void setData(List<Buddy> data) {
         this.buddyList = data;
     }

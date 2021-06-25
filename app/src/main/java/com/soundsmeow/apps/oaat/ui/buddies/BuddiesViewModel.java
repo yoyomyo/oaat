@@ -1,5 +1,7 @@
 package com.soundsmeow.apps.oaat.ui.buddies;
 
+import android.util.Log;
+
 import androidx.lifecycle.ViewModel;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -15,8 +17,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BuddiesViewModel extends ViewModel {
 
@@ -57,9 +62,11 @@ public class BuddiesViewModel extends ViewModel {
                     userDetailsDBReference.child(id).get().addOnCompleteListener(userDetail -> {
                         if (userDetail != null) {
                             Buddy b = Buddy.fromSnapshot(userDetail.getResult());
-                            buddies.add(b);
-                            emitter.onNext(buddies);
+                            if (!buddies.contains(b)) {
+                                buddies.add(b);
+                            }
                         }
+                        emitter.onNext(buddies);
                     });
                 } else {
                     emitter.onError(new Exception("userId is null"));

@@ -42,4 +42,15 @@ public class Buddy {
         return buddy;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Buddy) {
+            Buddy t = (Buddy) obj;
+            return t.getUserName() != null
+                    && userName.equals(t.getUserName())
+                    && photoUrl == t.getPhotoUrl();
+        }
+        return false;
+    }
+
 }

@@ -19,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.soundsmeow.apps.oaat.R;
 
@@ -47,7 +46,7 @@ public class BuddiesFragment extends Fragment {
         progressBar = root.findViewById(R.id.progress_bar);
 
         mViewModel = new ViewModelProvider(this).get(BuddiesViewModel.class);
-        buddyAdapter = new BuddyRecyclerViewAdapter();
+        buddyAdapter = new BuddyRecyclerViewAdapter(mViewModel.buddies);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(buddyAdapter);
 
@@ -56,26 +55,22 @@ public class BuddiesFragment extends Fragment {
             buddyAdapter.setData(buddies);
             buddyAdapter.notifyDataSetChanged();
         };
-        mDisposable.add(mViewModel.findBuddiesFlowable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(buddyList -> buddyListObserver.onChanged(buddyList)));
 
-
+        if (buddyAdapter.getItemCount() == 0) {
+            mDisposable.add(mViewModel.findBuddiesFlowable()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(buddyList -> buddyListObserver.onChanged(buddyList)));
+        } else {
+            // data is already there
+            progressBar.setVisibility(View.GONE);
+        }
         return root;
     }
 
-    public static class BuddyViewHolder extends RecyclerView.ViewHolder {
-        TextView buddyTextView;
-        TextView buddyStatusTextView;
-        CircleImageView buddyProfileImageView;
-
-        public BuddyViewHolder(View v) {
-            super(v);
-            buddyTextView = (TextView) itemView.findViewById(R.id.buddy_name);
-            buddyStatusTextView = (TextView) itemView.findViewById(R.id.buddy_status);
-            buddyProfileImageView = (CircleImageView) itemView.findViewById(R.id.buddy_profile);
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDisposable.dispose();
     }
-
 }

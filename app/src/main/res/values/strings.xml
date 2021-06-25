@@ -8,5 +8,6 @@
     <string name="sign_in_failed">Sign in failed</string>
     <string name="sign_out">Sign out</string>
     <string name="streak_hint">Add a streak</string>
+    <string name="already_seen">You scored a streak already today</string>
     <string name="last_updated_time">Last updated: %s</string>
 </resources>
