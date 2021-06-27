@@ -26,6 +26,7 @@ public class BuddyRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         this.buddyList = data;
     }
 
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -29,4 +29,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/buddy_list_wrapper" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_buddy_button"
+        android:layout_width="54dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="200dp"
+        android:clickable="true"
+        android:elevation="20dp"
+        android:focusable="true"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="48dp"
+        app:srcCompat="@drawable/ic_add_white_24dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

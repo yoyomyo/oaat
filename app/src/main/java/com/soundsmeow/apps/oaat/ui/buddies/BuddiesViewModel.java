@@ -1,27 +1,24 @@
 package com.soundsmeow.apps.oaat.ui.buddies;
 
-import android.util.Log;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.FlowableEmitter;
-import io.reactivex.FlowableOnSubscribe;
-import io.reactivex.annotations.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class BuddiesViewModel extends ViewModel {
 
@@ -75,5 +72,28 @@ public class BuddiesViewModel extends ViewModel {
         }), BackpressureStrategy.DROP);
     }
 
+
+    public Flowable<Void> addBuddiesFlowable(String id) {
+        Map<String, Object> newBuddy = new HashMap<>();
+        DatabaseReference key = buddiesDBReference.child(mUser.getUid()).push();
+        newBuddy.put(key.getKey(), id);
+
+        return Flowable.create(emitter -> buddiesDBReference.child(mUser.getUid()).updateChildren(newBuddy, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (error != null) {
+                    emitter.onError(new Exception("Data could not be saved " + error.getMessage()));
+                } else {
+                    ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            System.out.println("Data saved successfully.");
+                        }
+                    });
+
+                }
+            }
+        }), BackpressureStrategy.DROP);
+    }
 
 }

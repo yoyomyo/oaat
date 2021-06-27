@@ -86,7 +86,6 @@ public class StreakRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         return true;
                     });
         }
-
     }
 
     private String daysElapsed(Date lastTime) {

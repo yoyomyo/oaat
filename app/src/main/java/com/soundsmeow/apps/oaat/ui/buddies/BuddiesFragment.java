@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import android.view.LayoutInflater;
@@ -60,11 +61,19 @@ public class BuddiesFragment extends Fragment {
             mDisposable.add(mViewModel.findBuddiesFlowable()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(buddyList -> buddyListObserver.onChanged(buddyList)));
+                    .subscribe(buddyList -> {
+                        buddyListObserver.onChanged(buddyList);
+                    }));
         } else {
             // data is already there
             progressBar.setVisibility(View.GONE);
         }
+
+        View fab = root.findViewById(R.id.add_buddy_button);
+        fab.setOnClickListener(v -> mDisposable.add(mViewModel.addBuddiesFlowable("RNROMd3WjXMtsNtgNeEmWQOQ3Bm1")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()));
         return root;
     }
 
